@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { supabase } from "../services/supabaseClient";
-import { orgInsert, orgSelect } from "../services/tenantSupabase";
+import { orgSelect } from "../services/tenantSupabase";
 import { ORGANIZATION_ID } from "@/shared/tenant";
 import { Loader2, ShoppingCart, Check, CreditCard } from "lucide-react";
 
@@ -11,7 +11,6 @@ export default function Checkout() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [userEmail, setUserEmail] = useState<string | null>(null);
-  const [orderId, setOrderId] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
@@ -51,7 +50,6 @@ export default function Checkout() {
         .single();
       if (insErr) throw insErr;
       const newOrderId = inserted?.id as string;
-      setOrderId(newOrderId);
 
       // 3) Criar preferência via API serverless
       const apiUrl = import.meta.env?.VITE_API_BASE

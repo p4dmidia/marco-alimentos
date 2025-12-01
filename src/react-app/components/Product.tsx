@@ -12,6 +12,10 @@ export default function Product({ onRegisterClick, isLoggedIn = false }: Product
   const navigate = useNavigate();
 
   const handleBuyClick = async () => {
+    if (isLoggedIn) {
+      navigate("/checkout");
+      return;
+    }
     const { data } = await supabase.auth.getSession();
     const session = data.session;
     if (session) {
@@ -19,7 +23,11 @@ export default function Product({ onRegisterClick, isLoggedIn = false }: Product
       return;
     }
     localStorage.setItem("redirect_after_login", "/checkout");
-    navigate("/cadastro");
+    if (onRegisterClick) {
+      onRegisterClick();
+    } else {
+      navigate("/cadastro");
+    }
   };
 
   const productCategories = [
