@@ -14,7 +14,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const token = process.env.MP_ACCESS_TOKEN;
-  const siteUrl = process.env.SITE_URL || "http://localhost:5173";
+  const originHeader = (req.headers["origin"] as string) || "";
+  const hostHeader = (req.headers["host"] as string) || "";
+  const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "";
+  const siteUrl = process.env.SITE_URL || (originHeader && originHeader.startsWith("http") ? originHeader : vercelUrl || (hostHeader ? `https://${hostHeader}` : "https://localhost:5173"));
   if (!token) {
     return res.status(500).json({ error: "MP_ACCESS_TOKEN não configurado" });
   }
@@ -37,9 +40,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       external_reference: String(order_id),
       payer: { email: String(email) },
       back_urls: {
-        success: `${siteUrl}/checkout/callback?status=success`,
-        failure: `${siteUrl}/checkout/callback?status=failure`,
-        pending: `${siteUrl}/checkout/callback?status=pending`,
+        success: `${siteUrl}/checkout/callback?status=approved&order_id=${order_id}`,
+        failure: `${siteUrl}/checkout/callback?status=failure&order_id=${order_id}`,
+        pending: `${siteUrl}/checkout/callback?status=pending&order_id=${order_id}`,
       },
       auto_return: "approved",
     };
