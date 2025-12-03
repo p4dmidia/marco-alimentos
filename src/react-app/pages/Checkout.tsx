@@ -28,7 +28,7 @@ export default function Checkout() {
       const amount = 289.90;
       const { data: inserted, error: insErr } = await supabase
         .from("orders")
-        .insert([{ amount, status: "pending", organization_id: ORGANIZATION_ID }])
+        .insert([{ amount, status: "pending", organization_id: ORGANIZATION_ID, user_id: null, affiliate_id: null }])
         .select("id")
         .single();
       if (insErr) throw insErr;

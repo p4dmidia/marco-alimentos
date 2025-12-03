@@ -1,16 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Star } from "lucide-react";
 import type { Testimonial } from "@/shared/types";
 
 export default function Testimonials() {
-  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-
-  useEffect(() => {
-    fetch("/api/testimonials")
-      .then((res) => res.json())
-      .then((data) => setTestimonials(data))
-      .catch((err) => console.error("Error loading testimonials:", err));
-  }, []);
+  const [testimonials] = useState<Testimonial[]>([]);
 
   const mockTestimonials = [
     {
@@ -39,7 +32,7 @@ export default function Testimonials() {
     }
   ];
 
-  const displayTestimonials = testimonials.length > 0 ? testimonials : mockTestimonials;
+  const displayTestimonials = mockTestimonials;
 
   return (
     <section id="depoimentos" className="py-20 bg-gradient-to-br from-red-50 via-white to-yellow-50">
