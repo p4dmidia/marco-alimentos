@@ -24,11 +24,17 @@ export default function Checkout() {
     setLoading(true);
     setError(null);
     try {
+      const { data: sessionData } = await supabase.auth.getSession();
+      const session = sessionData.session;
       // 1) Criar pedido pending (anônimo se não logado)
       const amount = 289.90;
+      const payload: Record<string, any> = { amount, status: "pending", organization_id: ORGANIZATION_ID };
+      if (session?.user?.id) {
+        payload.user_id = session.user.id;
+      }
       const { data: inserted, error: insErr } = await supabase
         .from("orders")
-        .insert([{ amount, status: "pending", organization_id: ORGANIZATION_ID, user_id: null, affiliate_id: null }])
+        .insert(payload)
         .select("id")
         .single();
       if (insErr) throw insErr;
