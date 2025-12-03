@@ -1,9 +1,6 @@
-import { useState } from "react";
 import { Star } from "lucide-react";
-import type { Testimonial } from "@/shared/types";
 
 export default function Testimonials() {
-  const [testimonials] = useState<Testimonial[]>([]);
 
   const mockTestimonials = [
     {
