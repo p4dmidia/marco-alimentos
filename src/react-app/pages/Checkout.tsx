@@ -5,7 +5,6 @@ import { ORGANIZATION_ID } from "@/shared/tenant";
 import { Loader2, ShoppingCart, Check, CreditCard } from "lucide-react";
 
 export default function Checkout() {
-  const [sessionUserId, setSessionUserId] = useState<string | null>(null);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -15,17 +14,11 @@ export default function Checkout() {
     supabase.auth.getSession().then(({ data }) => {
       const session = data.session;
       if (session) {
-        setSessionUserId(session.user.id);
         setUserEmail(session.user.email ?? null);
       }
     });
-  }, [navigate]);
-
-  useEffect(() => {
-    if (sessionUserId) {
-      initCheckout();
-    }
-  }, [sessionUserId]);
+    initCheckout();
+  }, []);
 
   const initCheckout = async () => {
     setLoading(true);
