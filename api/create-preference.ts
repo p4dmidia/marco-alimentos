@@ -24,8 +24,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   try {
     const { order_id, title, quantity, unit_price, email } = req.body || {};
-    if (!order_id || !title || !quantity || !unit_price || !email) {
-      return res.status(400).json({ error: "Campos obrigatórios: order_id, title, quantity, unit_price, email" });
+    if (!order_id || !title || !quantity || !unit_price) {
+      return res.status(400).json({ error: "Campos obrigatórios: order_id, title, quantity, unit_price" });
     }
 
     const payload = {
@@ -38,7 +38,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         },
       ],
       external_reference: String(order_id),
-      payer: { email: String(email) },
+      ...(email ? { payer: { email: String(email) } } : {}),
       back_urls: {
         success: `${siteUrl}/checkout/callback?status=approved&order_id=${order_id}`,
         failure: `${siteUrl}/checkout/callback?status=failure&order_id=${order_id}`,

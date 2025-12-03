@@ -15,11 +15,7 @@ export default function Checkout() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       const session = data.session;
-      if (!session) {
-        // direciona para cadastro com redirect configurado
-        localStorage.setItem("redirect_after_login", "/checkout");
-        navigate("/cadastro");
-      } else {
+      if (session) {
         setSessionUserId(session.user.id);
         setUserEmail(session.user.email ?? null);
       }
@@ -36,16 +32,11 @@ export default function Checkout() {
     setLoading(true);
     setError(null);
     try {
-      // 1) Descobrir o afiliado do usuário
-      const { data: affRows } = await orgSelect("affiliates", "id").eq("user_id", sessionUserId as string).limit(1);
-      const affiliateId = (affRows as any)?.[0]?.id;
-      if (!affiliateId) throw new Error("Afiliado não encontrado");
-
-      // 2) Criar pedido pending
+      // 1) Criar pedido pending (anônimo se não logado)
       const amount = 289.90;
       const { data: inserted, error: insErr } = await supabase
         .from("orders")
-        .insert([{ affiliate_id: affiliateId, amount, status: "pending", organization_id: ORGANIZATION_ID }])
+        .insert([{ amount, status: "pending", organization_id: ORGANIZATION_ID }])
         .select("id")
         .single();
       if (insErr) throw insErr;

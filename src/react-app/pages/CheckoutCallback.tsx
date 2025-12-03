@@ -42,8 +42,15 @@ export default function CheckoutCallback() {
               await processOrderCommissions(String(externalRef));
             }
           }
-          setMessage("Parabéns, Kit Garantido! Pagamento confirmado.");
-          setTimeout(() => navigate("/dashboard"), 2000);
+          const { data } = await supabase.auth.getSession();
+          const loggedIn = !!data.session;
+          if (loggedIn) {
+            setMessage("Parabéns, Kit Garantido! Pagamento confirmado.");
+            setTimeout(() => navigate("/dashboard"), 2000);
+          } else {
+            setMessage("Pagamento Confirmado! Para acessar seu kit, por favor crie sua senha.");
+            setTimeout(() => navigate("/cadastro"), 3000);
+          }
         } else if (status.toLowerCase() === "failure") {
           setMessage("Pagamento não realizado. Você pode tentar novamente.");
         } else {
