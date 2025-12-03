@@ -35,7 +35,7 @@ export default function Home() {
         isLoggedIn={loggedIn}
       />
       <HowItWorks />
-      <Product onRegisterClick={() => (window.location.href = "/cadastro")} isLoggedIn={loggedIn} />
+      <Product isLoggedIn={loggedIn} />
       <Testimonials />
       <FAQ />
       <Footer />
