@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { supabase } from "../services/supabaseClient";
-import { orgSelect } from "../services/tenantSupabase";
 import { ORGANIZATION_ID } from "@/shared/tenant";
 import { Loader2, ShoppingCart, Check, CreditCard } from "lucide-react";
 
