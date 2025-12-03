@@ -1,18 +1,20 @@
 import { Truck, Shield, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router";
-import { supabase } from "../services/supabaseClient";
 // removed legacy auth provider usage
 
 interface ProductProps {
-  onRegisterClick?: () => void;
   isLoggedIn?: boolean;
 }
 
-export default function Product({ onRegisterClick, isLoggedIn = false }: ProductProps = {}) {
+export default function Product({ isLoggedIn = false }: ProductProps = {}) {
   const navigate = useNavigate();
 
   const handleBuyClick = async () => {
-    navigate("/checkout");
+    if (isLoggedIn) {
+      navigate("/checkout");
+    } else {
+      navigate("/checkout");
+    }
   };
 
   const productCategories = [
